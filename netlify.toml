@@ -1,0 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[dev]
+  command = "npm run dev"
+  port = 8888
+
+# API routes → Netlify Functions
+[[redirects]]
+  from = "/api/waitlist"
+  to = "/.netlify/functions/waitlist"
+  status = 200
+
+[[redirects]]
+  from = "/api/feedback"
+  to = "/.netlify/functions/feedback"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/data"
+  to = "/.netlify/functions/admin-data"
+  status = 200
+
+# SPA fallback — all other routes serve index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
