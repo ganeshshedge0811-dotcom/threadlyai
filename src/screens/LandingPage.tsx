@@ -27,9 +27,9 @@ const LandingPage: React.FC = () => {
   const [liveStats, setLiveStats] = useState({ signups: 0, feedback: 0 });
   useEffect(() => {
     const fetchStats = () => {
-      fetch('/api/admin/data')
+      fetch('/api/stats')
         .then(r => r.json())
-        .then(d => setLiveStats({ signups: d.waitlist?.length ?? 0, feedback: d.feedback?.length ?? 0 }))
+        .then(d => setLiveStats({ signups: d.waitlistCount ?? 0, feedback: d.feedbackCount ?? 0 }))
         .catch(() => {}); // silent fail
     };
     fetchStats();
@@ -441,16 +441,7 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <button 
-            onClick={() => handleNavigate('/admin')}
-            className="hover-lift"
-            style={{ 
-              marginTop: '3rem', background: '#1f2937', border: '1px solid #374151', color: '#9ca3af',
-              padding: '0.6rem 1.25rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600,
-              display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer'
-            }}>
-            <Lock size={14} /> View signups (Admin)
-          </button>
+
 
         </div>
       </section>

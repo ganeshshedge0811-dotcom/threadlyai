@@ -16,6 +16,11 @@ const headers = {
 export const handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
+  const authHeader = event.headers.authorization || '';
+  if (authHeader !== 'threadlyai2024') {
+    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
+  }
+
   try {
     const [waitlistRes, feedbackRes] = await Promise.all([
       supabase.from('waitlist').select('*').order('created_at', { ascending: false }),

@@ -48,8 +48,11 @@ const AdminScreen: React.FC = () => {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    fetch('/api/admin/data')
-      .then(res => res.json())
+    fetch('/api/admin/data', { headers: { 'Authorization': passwordInput } })
+      .then(res => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
       .then((d: AdminData) => { setData(d); setLoading(false); })
       .catch(err => { console.error('Failed to load admin data', err); setLoading(false); });
   }, [isAuthenticated]);
