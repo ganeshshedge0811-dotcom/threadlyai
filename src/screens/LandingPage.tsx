@@ -107,16 +107,19 @@ const LandingPage: React.FC = () => {
       <LightningCursor />
 
       {/* 🔔 Top Announcement Banner */}
-      <div style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
-        background: 'linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #a855f7, #6366f1)',
-        backgroundSize: '300% 100%',
-        animation: 'gradientShift 6s ease infinite',
-        padding: '0.55rem 1rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem',
-        fontSize: '0.82rem', color: '#fff', fontWeight: 500,
-        borderBottom: '1px solid rgba(255,255,255,0.15)',
-      }}>
+      {/* Fixed Header Container */}
+      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, display: 'flex', flexDirection: 'column' }}>
+        
+        {/* Announcement Banner */}
+        <div style={{
+          background: 'linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #a855f7, #6366f1)',
+          backgroundSize: '300% 100%',
+          animation: 'gradientShift 6s ease infinite',
+          padding: '0.6rem 1rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap',
+          fontSize: '0.82rem', color: '#fff', fontWeight: 500, textAlign: 'center',
+          borderBottom: '1px solid rgba(255,255,255,0.15)',
+        }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
           🚀 <span>We're launching soon — join the waitlist for <strong>early access & exclusive pricing!</strong></span>
         </span>
@@ -137,15 +140,14 @@ const LandingPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Navbar — sits below announcement banner */}
-      <nav style={{ 
-        position: 'fixed', top: '36px', left: 0, right: 0, zIndex: 100,
-        backdropFilter: 'blur(12px)', 
-        backgroundColor: 'rgba(10,12,16,0.85)',
-        borderBottom: '1px solid var(--border-color)',
-        padding: '1rem 2rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-      }}>
+        {/* Navbar */}
+        <nav style={{ 
+          backdropFilter: 'blur(12px)', 
+          backgroundColor: 'rgba(10,12,16,0.85)',
+          borderBottom: '1px solid var(--border-color)',
+          padding: '1rem 2rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem'
+        }}>
         <div className="hover-lift" onClick={() => handleNavigate('/')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
           <Shield size={22} color="var(--primary-green)" />
           <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>ThreadlyAI</span>
@@ -168,7 +170,8 @@ const LandingPage: React.FC = () => {
             </>
           )}
         </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Hero */}
       <section className="mesh-bg" style={{ 
