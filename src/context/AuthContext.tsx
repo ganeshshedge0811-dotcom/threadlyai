@@ -98,7 +98,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
           });
 
           // Dispatch Welcome Email
-          fetch('http://localhost:3001/api/email/welcome', {
+          fetch('/api/email/welcome', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, name })
@@ -112,7 +112,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
         if (error) throw error;
         
         // Dispatch Welcome Email on login
-        fetch('http://localhost:3001/api/email/welcome', {
+        fetch('/api/email/welcome', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, name: email.split('@')[0] })
@@ -127,7 +127,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
         setUser(mockUser);
         
         // Dispatch Welcome Email to node server just for demo logs
-        fetch('http://localhost:3001/api/email/welcome', {
+        fetch('/api/email/welcome', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, name: name || email.split('@')[0] })
@@ -152,7 +152,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       setUser(mockUser);
       
       // Dispatch Welcome Email on mock Google login
-      fetch('http://localhost:3001/api/email/welcome', {
+      fetch('/api/email/welcome', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: mockUser.email, name: mockUser.name })

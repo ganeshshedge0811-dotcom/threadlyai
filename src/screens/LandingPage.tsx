@@ -78,7 +78,7 @@ const LandingPage: React.FC = () => {
   };
 
   const features = [
-    { icon: <Search size={24} />, title: '24/7 Platform Monitoring', desc: 'Thredly scans Reddit, Twitter, LinkedIn & HackerNews around the clock for high-intent conversations matching your keywords.' },
+    { icon: <Search size={24} />, title: '24/7 Platform Monitoring', desc: 'ThreadlyAI scans Reddit, Twitter, LinkedIn & HackerNews around the clock for high-intent conversations matching your keywords.' },
     { icon: <Zap size={24} />, title: 'AI-Drafted Replies', desc: 'Claude AI crafts a genuine, helpful response that provides 90% value and subtly positions your product — never sounding like an ad.' },
     { icon: <CheckCircle size={24} />, title: 'Human Approval Required', desc: 'Nothing ever posts automatically. Every AI draft waits in your inbox for your personal review and one-click approval.' },
     { icon: <Shield size={24} />, title: 'Built-In Ban Protection', desc: 'Platform-specific credit wallets enforce natural posting rates. Automated account rotation kicks in if a primary account is flagged.' },
@@ -87,8 +87,8 @@ const LandingPage: React.FC = () => {
   ];
 
   const steps = [
-    { n: '01', title: 'Connect & Configure', desc: 'Tell Thredly your product name, target audience, competitor keywords, and which platforms to monitor.' },
-    { n: '02', title: 'Thredly Finds Leads', desc: 'Our AI scans thousands of posts daily. Only high-intent threads where users are actively looking for solutions like yours get surfaced.' },
+    { n: '01', title: 'Connect & Configure', desc: 'Tell ThreadlyAI your product name, target audience, competitor keywords, and which platforms to monitor.' },
+    { n: '02', title: 'ThreadlyAI Finds Leads', desc: 'Our AI scans thousands of posts daily. Only high-intent threads where users are actively looking for solutions like yours get surfaced.' },
     { n: '03', title: 'Review AI Drafts', desc: 'Each thread comes with a ready-to-go AI reply in your inbox. Edit it to sound exactly like you, then approve.' },
     { n: '04', title: 'Post & Track Growth', desc: 'Your approved reply goes live via your account. Watch your analytics as leads start converting into customers.' },
   ];
@@ -148,7 +148,7 @@ const LandingPage: React.FC = () => {
       }}>
         <div className="hover-lift" onClick={() => handleNavigate('/')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
           <Shield size={22} color="var(--primary-green)" />
-          <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>Thredly</span>
+          <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>ThreadlyAI</span>
         </div>
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
           <a href="#features" className="landing-nav-link" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.875rem' }}>Features</a>
@@ -200,7 +200,7 @@ const LandingPage: React.FC = () => {
           </h1>
           
           <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', marginBottom: '2.5rem', lineHeight: '1.6' }}>
-            Thredly monitors Reddit, Twitter, LinkedIn & HackerNews 24/7 for people asking about your exact pain points. AI drafts the reply. You approve it. Then it posts.
+            ThreadlyAI monitors Reddit, Twitter, LinkedIn & HackerNews 24/7 for people asking about your exact pain points. AI drafts the reply. You approve it. Then it posts.
           </p>
           
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -220,7 +220,7 @@ const LandingPage: React.FC = () => {
       {/* How it Works */}
       <section id="how-it-works" style={{ padding: '6rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 700, marginBottom: '1rem' }}>How Thredly Works</h2>
+          <h2 style={{ fontSize: '2.25rem', fontWeight: 700, marginBottom: '1rem' }}>How ThreadlyAI Works</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>From setup to your first customer in 4 simple steps.</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
@@ -473,9 +473,9 @@ const LandingPage: React.FC = () => {
             </button>
             
             <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', color: '#f3f4f6' }}>
-              Thredly <span style={{ background: 'linear-gradient(to right, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Overview</span>
+              ThreadlyAI <span style={{ background: 'linear-gradient(to right, #a855f7, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Overview</span>
             </h2>
-            <p style={{ color: '#9ca3af', marginBottom: '2rem', fontSize: '1.05rem' }}>Everything you need to know about how Thredly works and our credit system.</p>
+            <p style={{ color: '#9ca3af', marginBottom: '2rem', fontSize: '1.05rem' }}>Everything you need to know about how ThreadlyAI works and our credit system.</p>
             
             <div style={{ marginBottom: '2.5rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#e5e7eb', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -483,8 +483,8 @@ const LandingPage: React.FC = () => {
               </h3>
               <div style={{ background: '#1f2937', borderRadius: '12px', padding: '1.5rem' }}>
                 <ol style={{ margin: 0, paddingLeft: '1.5rem', color: '#d1d5db', lineHeight: 1.7 }}>
-                  <li style={{ marginBottom: '0.5rem' }}><strong>Configure:</strong> Tell Thredly your product, audience, and keywords.</li>
-                  <li style={{ marginBottom: '0.5rem' }}><strong>Scan:</strong> Thredly monitors Reddit, Twitter, LinkedIn 24/7 for high-intent discussions.</li>
+                  <li style={{ marginBottom: '0.5rem' }}><strong>Configure:</strong> Tell ThreadlyAI your product, audience, and keywords.</li>
+                  <li style={{ marginBottom: '0.5rem' }}><strong>Scan:</strong> ThreadlyAI monitors Reddit, Twitter, LinkedIn 24/7 for high-intent discussions.</li>
                   <li style={{ marginBottom: '0.5rem' }}><strong>AI Drafts:</strong> Claude AI automatically drafts natural, helpful replies mentioning your product.</li>
                   <li><strong>Approve & Post:</strong> You review the draft in your Inbox, click Approve, and it posts instantly via your own connected account.</li>
                 </ol>
@@ -512,11 +512,11 @@ const LandingPage: React.FC = () => {
                 <BarChart2 size={20} color="#3b82f6" /> The Credit System
               </h3>
               <div style={{ background: '#1f2937', borderRadius: '12px', padding: '1.5rem', color: '#d1d5db', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                <p style={{ marginBottom: '1rem' }}>To protect your connected accounts from being flagged as spam, Thredly uses a strict credit wallet system. You receive a set amount of credits per platform.</p>
+                <p style={{ marginBottom: '1rem' }}>To protect your connected accounts from being flagged as spam, ThreadlyAI uses a strict credit wallet system. You receive a set amount of credits per platform.</p>
                 <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
                   <li style={{ marginBottom: '0.25rem' }}><strong>1 Scan = 0 Credits</strong> (Scanning is unlimited)</li>
                   <li style={{ marginBottom: '0.25rem' }}><strong>1 AI Drafted Reply = 1 Credit</strong></li>
-                  <li>When you exhaust a platform's daily credits (e.g. 50/50 for HackerNews), Thredly stops drafting replies for that platform until the next reset to ensure maximum account health.</li>
+                  <li>When you exhaust a platform's daily credits (e.g. 50/50 for HackerNews), ThreadlyAI stops drafting replies for that platform until the next reset to ensure maximum account health.</li>
                 </ul>
               </div>
             </div>
@@ -537,9 +537,9 @@ const LandingPage: React.FC = () => {
           <div style={{ background: 'linear-gradient(135deg, var(--primary-indigo), var(--primary-purple))', padding: '0.4rem', borderRadius: '8px' }}>
             <Shield size={20} color="white" />
           </div>
-          <span className="text-gradient" style={{ fontWeight: 800, fontSize: '1.25rem' }}>Thredly</span>
+          <span className="text-gradient" style={{ fontWeight: 800, fontSize: '1.25rem' }}>ThreadlyAI</span>
         </div>
-        <p style={{ fontSize: '0.8rem' }}>© 2026 Thredly. Built for founders who are serious about organic growth.</p>
+        <p style={{ fontSize: '0.8rem' }}>© 2026 ThreadlyAI. Built for founders who are serious about organic growth.</p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem' }}>
           {['Privacy Policy', 'Terms of Service', 'Contact'].map(link => (
             <a key={link} href="#" className="landing-nav-link" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', textDecoration: 'none' }}>{link}</a>

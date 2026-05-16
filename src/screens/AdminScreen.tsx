@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, ArrowLeft, Download, Users, MessageSquare, Star, Lock, Eye, EyeOff } from 'lucide-react';
 
-const ADMIN_PASSWORD = 'thredly2024';
+const ADMIN_PASSWORD = 'threadlyai2024';
 
 interface WaitlistEntry {
   id: string;

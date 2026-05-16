@@ -177,20 +177,20 @@ app.post('/api/email/welcome', async (req, res) => {
 
   try {
     const data = await resend.emails.send({
-      from: 'Thredly <onboarding@resend.dev>',
+      from: 'ThreadlyAI <onboarding@resend.dev>',
       to: email,
-      subject: "Welcome to Thredly — Let's find your first customer! 🚀",
+      subject: "Welcome to ThreadlyAI — Let's find your first customer! 🚀",
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-          <h2>Welcome to Thredly, ${name || 'there'}! 🎉</h2>
-          <p>Your Thredly workspace is ready. We're excited to help you find high-intent conversations for your product.</p>
+          <h2>Welcome to ThreadlyAI, ${name || 'there'}! 🎉</h2>
+          <p>Your ThreadlyAI workspace is ready. We're excited to help you find high-intent conversations for your product.</p>
           <p><strong>What's next?</strong></p>
           <ul>
             <li>Set up your product details & keywords</li>
             <li>Connect your platform API keys</li>
             <li>Start reviewing AI-drafted replies</li>
           </ul>
-          <p>Happy growing!<br/>The Thredly Team</p>
+          <p>Happy growing!<br/>The ThreadlyAI Team</p>
         </div>
       `,
     });
@@ -275,5 +275,5 @@ app.get('/api/admin/data', (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`🚀 Thredly Backend running on http://localhost:${PORT}`);
+  console.log(`🚀 ThreadlyAI Backend running on http://localhost:${PORT}`);
 });

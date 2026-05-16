@@ -79,7 +79,7 @@ const InboxScreen: React.FC = () => {
         <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'var(--bg-card)', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>All caught up!</h3>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '300px', margin: '0 auto' }}>No new threads. Thredly is monitoring in the background...</p>
+          <p style={{ color: 'var(--text-muted)', maxWidth: '300px', margin: '0 auto' }}>No new threads. ThreadlyAI is monitoring in the background...</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>

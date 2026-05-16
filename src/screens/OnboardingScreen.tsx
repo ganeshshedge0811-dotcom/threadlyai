@@ -124,7 +124,7 @@ const OnboardingScreen: React.FC = () => {
                 <input
                   type="text" id="productName" name="productName"
                   value={formData.productName} onChange={handleChange}
-                  placeholder="e.g. Thredly"
+                  placeholder="e.g. ThreadlyAI"
                 />
               </div>
 

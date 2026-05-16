@@ -49,9 +49,9 @@ export const handler = async (event) => {
     // 3. Send welcome email via Resend
     try {
       await resend.emails.send({
-        from: 'Thredly <onboarding@resend.dev>',
+        from: 'ThreadlyAI <onboarding@resend.dev>',
         to: [email],
-        subject: `🎉 You're on the Thredly waitlist! (#${position})`,
+        subject: `🎉 You're on the ThreadlyAI waitlist! (#${position})`,
         html: `
 <!DOCTYPE html>
 <html>
@@ -66,7 +66,7 @@ export const handler = async (event) => {
     <div style="background:linear-gradient(135deg,#6366f1,#a855f7);border-radius:16px;padding:2.5rem;text-align:center;margin-bottom:2rem;">
       <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
       <h1 style="color:#fff;margin:0;font-size:1.75rem;font-weight:800;">You're In!</h1>
-      <p style="color:rgba(255,255,255,0.85);margin:0.5rem 0 0;font-size:1rem;">Welcome to the Thredly waitlist, ${firstName}.</p>
+      <p style="color:rgba(255,255,255,0.85);margin:0.5rem 0 0;font-size:1rem;">Welcome to the ThreadlyAI waitlist, ${firstName}.</p>
     </div>
 
     <!-- Position Badge -->
@@ -107,7 +107,7 @@ export const handler = async (event) => {
     <!-- Footer -->
     <div style="text-align:center;padding:1rem;">
       <p style="color:#6b7280;font-size:0.8rem;margin:0;">
-        You're receiving this because you signed up at <strong style="color:#a855f7;">thredly.app</strong><br>
+        You're receiving this because you signed up at <strong style="color:#a855f7;">threadlyai.app</strong><br>
         Questions? Reply to this email — we read every one.
       </p>
     </div>

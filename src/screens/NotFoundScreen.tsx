@@ -21,7 +21,7 @@ const NotFoundScreen: React.FC = () => {
 
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
           <Shield size={20} color="var(--primary-green)" />
-          <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Thredly</span>
+          <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>ThreadlyAI</span>
         </div>
 
         <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.75rem' }}>

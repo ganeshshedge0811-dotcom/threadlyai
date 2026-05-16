@@ -23,6 +23,16 @@
   to = "/.netlify/functions/admin-data"
   status = 200
 
+[[redirects]]
+  from = "/api/scan/reddit"
+  to = "/.netlify/functions/scan"
+  status = 200
+
+[[redirects]]
+  from = "/api/email/welcome"
+  to = "/.netlify/functions/welcome-email"
+  status = 200
+
 # SPA fallback — all other routes serve index.html
 [[redirects]]
   from = "/*"

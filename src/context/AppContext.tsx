@@ -164,7 +164,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
       } else {
         // Fallback for demo
          setThreads([{
-          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from Thredly! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
+          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from ThreadlyAI! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
          }]);
       }
 
@@ -193,7 +193,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
       // Fallback for demo if DB is not setup
       if (threads.length === 0) {
          setThreads([{
-          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from Thredly! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
+          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from ThreadlyAI! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
          }]);
       }
     }
@@ -351,7 +351,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
     setIsScanning(true);
     
     try {
-      const response = await fetch('http://localhost:3001/api/scan/reddit', {
+      const response = await fetch('/api/scan/reddit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

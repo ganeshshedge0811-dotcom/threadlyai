@@ -50,7 +50,7 @@ const Layout: React.FC = () => {
               <Shield size={22} color="white" />
             </div>
             <div>
-              <h1 className="text-gradient" style={{ marginBottom: 0, fontSize: '1.35rem', fontWeight: 800 }}>Thredly</h1>
+              <h1 className="text-gradient" style={{ marginBottom: 0, fontSize: '1.35rem', fontWeight: 800 }}>ThreadlyAI</h1>
               <p style={{ fontSize: '0.65rem', marginTop: '0.1rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Organic Acquisition</p>
             </div>
           </div>
@@ -384,7 +384,7 @@ const Layout: React.FC = () => {
               Sign Out
             </h3>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '2rem' }}>
-              Are you sure you want to sign out of Thredly?
+              Are you sure you want to sign out of ThreadlyAI?
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
               <button 

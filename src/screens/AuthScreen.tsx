@@ -251,7 +251,7 @@ const AuthScreen: React.FC = () => {
             </div>
 
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-              Welcome to Thredly! 🎉
+              Welcome to ThreadlyAI! 🎉
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
               Your account has been created successfully.
@@ -281,10 +281,10 @@ const AuthScreen: React.FC = () => {
                 borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem'
               }}>
                 <p style={{ margin: '0 0 0.5rem', color: 'var(--text-main)', fontWeight: 500 }}>
-                  Subject: Welcome to Thredly — Let's find your first customer! 🚀
+                  Subject: Welcome to ThreadlyAI — Let's find your first customer! 🚀
                 </p>
                 <p style={{ margin: 0, fontSize: '0.75rem' }}>
-                  Hey{form.name ? ` ${form.name}` : ''}! Your Thredly workspace is ready. 
+                  Hey{form.name ? ` ${form.name}` : ''}! Your ThreadlyAI workspace is ready. 
                   Start by configuring your product details, keywords, and platforms. 
                   We'll find high-intent conversations for you 24/7.
                 </p>
@@ -338,13 +338,13 @@ const AuthScreen: React.FC = () => {
             <div style={{ background: 'linear-gradient(135deg, var(--primary-indigo), var(--primary-purple))', padding: '0.4rem', borderRadius: '8px' }}>
               <Shield size={24} color="white" />
             </div>
-            <span className="text-gradient" style={{ fontSize: '1.75rem', fontWeight: 800 }}>Thredly</span>
+            <span className="text-gradient" style={{ fontSize: '1.75rem', fontWeight: 800 }}>ThreadlyAI</span>
           </div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
             {isRecoveryMode ? 'Update password' : isResetPassword ? 'Reset password' : isSignup ? 'Create your account' : 'Welcome back'}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            {isRecoveryMode ? 'Enter your new password below.' : isResetPassword ? 'Enter your email to receive a reset link.' : isSignup ? 'Start finding customers from real conversations.' : 'Sign in to your Thredly dashboard.'}
+            {isRecoveryMode ? 'Enter your new password below.' : isResetPassword ? 'Enter your email to receive a reset link.' : isSignup ? 'Start finding customers from real conversations.' : 'Sign in to your ThreadlyAI dashboard.'}
           </p>
         </div>
 
