@@ -162,10 +162,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
           url: t.url
         })));
       } else {
-        // Fallback for demo
-         setThreads([{
-          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from ThreadlyAI! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
-         }]);
+        setThreads([]);
       }
 
       // Fetch Approved Replies
@@ -190,11 +187,9 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
 
     } catch (error) {
       console.error('Error fetching data from Supabase:', error);
-      // Fallback for demo if DB is not setup
+      // Fail silently without setting fake data
       if (threads.length === 0) {
-         setThreads([{
-          id: 'demo_t1', title: 'Example Thread (Run schema.sql to see real data)', platform: 'Reddit', source: 'u/demo', postedTime: 'Just now', timeAgo: 'Just now', bodyPreview: 'This is a fallback thread because the Supabase tables might not exist yet.', snippet: 'This is a fallback thread...', aiDraft: 'Hello from ThreadlyAI! Please run the schema.sql in your Supabase SQL editor.', aiReply: '', intentScore: 'High', intent: 'High', intentValue: 9, url: '#'
-         }]);
+        setThreads([]);
       }
     }
   };
