@@ -346,11 +346,17 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
     setIsScanning(true);
     
     try {
+      // Get the secure session token from Supabase
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
       const response = await fetch('/api/scan/reddit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({
-          userId: user.id,
           keywords: settings.keywords || settings.productName,
           productName: settings.productName,
           productDescription: settings.productDescription,

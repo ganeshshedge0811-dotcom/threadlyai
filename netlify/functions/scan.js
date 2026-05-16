@@ -43,9 +43,23 @@ export const handler = async (event) => {
   }
 
   try {
-    const { userId, keywords, productName, productDescription, subreddits = ['SaaS', 'Entrepreneur', 'marketing'] } = JSON.parse(event.body || '{}');
+    // 1. Verify Authorization Header
+    const authHeader = event.headers.authorization || event.headers.Authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Missing or invalid Authorization header' }) };
+    }
+    const token = authHeader.split(' ')[1];
 
-    if (!userId || !keywords) {
+    // 2. Securely get user from Supabase using the token
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized token' }) };
+    }
+
+    const userId = user.id; // SECURE: Extracted from verified JWT
+    const { keywords, productName, productDescription, subreddits = ['SaaS', 'Entrepreneur', 'marketing'] } = JSON.parse(event.body || '{}');
+
+    if (!keywords) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing userId or keywords' }) };
     }
 
