@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Search, MessageSquare, CheckCircle, Shield, BarChart2, 
-  Zap, ArrowRight, Star, Bell, Lock, Info, X
+  Zap, ArrowRight, Star, Bell, Info, X
 } from 'lucide-react';
 import LightningCursor from '../components/LightningCursor';
 
