@@ -141,24 +141,19 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const loginWithGoogle = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google'
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard/inbox`,
+          scopes: 'email profile',
+        }
       });
       if (error) throw error;
     } catch (err: any) {
-      console.warn("Google auth failed. Attempting local mock fallback.", err);
-      // Fallback for demo
-      const mockUser = { id: `mock-google-${Date.now()}`, email: 'google.user@example.com', name: 'Google User' };
-      localStorage.setItem('mockUser', JSON.stringify(mockUser));
-      setUser(mockUser);
-      
-      // Dispatch Welcome Email on mock Google login
-      fetch('/api/email/welcome', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: mockUser.email, name: mockUser.name })
-      }).catch(() => {});
+      console.warn("Google auth failed.", err);
+      throw err;
     }
   };
+
 
   const logout = async () => {
     // Always clear user state immediately so UI updates right away
