@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useAppContext } from '../context/AppContext';
-import { CheckCircle, XCircle, ChevronDown, ChevronUp, RefreshCw, Sparkles, Inbox, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext, type Thread } from '../context/AppContext';
+import { CheckCircle, XCircle, ChevronDown, ChevronUp, RefreshCw, Sparkles, Inbox, ExternalLink, AlertTriangle, ArrowRight } from 'lucide-react';
 import { generateReplyDraft } from '../lib/ai';
 import RichTextEditor from '../components/RichTextEditor';
 
@@ -9,6 +10,7 @@ const PLATFORM_COLORS: Record<string, string> = { Reddit: '#ff4500', Twitter: '#
 const PLATFORM_ICONS: Record<string, string> = { Reddit: '🟠', Twitter: '🐦', LinkedIn: '🔵', HackerNews: '🟡' };
 
 const InboxScreen: React.FC = () => {
+  const navigate = useNavigate();
   const { threads, approveThread, rejectThread, refreshThreads, isScanning, settings } = useAppContext();
   const [activeFilter, setActiveFilter] = useState('All');
   const [drafts, setDrafts] = useState<Record<string, string>>({});
@@ -17,13 +19,13 @@ const InboxScreen: React.FC = () => {
   const [generatingId, setGeneratingId] = useState<string | null>(null);
 
   const filtered = activeFilter === 'All' ? threads : threads.filter(t => t.platform === activeFilter);
-  const getDraft = (t: any) => drafts[t.id] ?? t.aiDraft;
+  const getDraft = (t: Thread) => drafts[t.id] ?? t.aiDraft;
 
   const handleAction = async (action: () => Promise<void>, id: string) => {
     setLoadingId(id); await action(); setLoadingId(null);
   };
 
-  const handleGenerateAI = async (thread: any) => {
+  const handleGenerateAI = async (thread: Thread) => {
     setGeneratingId(thread.id); setExpandedId(thread.id);
     try {
       const d = await generateReplyDraft(thread.bodyPreview, thread.platform, settings);
@@ -52,6 +54,32 @@ const InboxScreen: React.FC = () => {
           {isScanning ? 'Scanning...' : 'Scan Now'}
         </button>
       </div>
+
+      {/* Setup Required Banner */}
+      {(!settings.productName || !settings.websiteUrl) && (
+        <div 
+          className="setup-banner"
+          onClick={() => navigate('/dashboard/onboarding')}
+        >
+          <div className="setup-banner-icon">
+            <AlertTriangle size={20} color="white" />
+          </div>
+          <div className="setup-banner-content">
+            <h4 className="setup-banner-title">
+              Complete Your Setup
+            </h4>
+            <p className="setup-banner-desc">
+              {!settings.productName && !settings.websiteUrl 
+                ? "Enter your product name and website URL in settings to start monitoring leads."
+                : !settings.productName 
+                  ? "Enter your product name in settings so the AI can draft personalized replies."
+                  : "Add your website/publicity URL in settings so the AI can direct leads to your product."
+              }
+            </p>
+          </div>
+          <ArrowRight className="setup-banner-arrow" size={18} />
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>

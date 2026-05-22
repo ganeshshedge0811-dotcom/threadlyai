@@ -205,9 +205,18 @@ app.post('/api/email/welcome', async (req, res) => {
 const dataFilePath = path.join(process.cwd(), 'server', 'data.json');
 const getDb = () => {
   if (!fs.existsSync(dataFilePath)) {
-    fs.writeFileSync(dataFilePath, JSON.stringify({ waitlist: [], feedback: [] }));
+    fs.writeFileSync(dataFilePath, JSON.stringify({ waitlist: [], feedback: [], users: [], visits: [] }));
   }
-  return JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
+  const db = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
+  let updated = false;
+  if (!db.waitlist) { db.waitlist = []; updated = true; }
+  if (!db.feedback) { db.feedback = []; updated = true; }
+  if (!db.users) { db.users = []; updated = true; }
+  if (!db.visits) { db.visits = []; updated = true; }
+  if (updated) {
+    saveDb(db);
+  }
+  return db;
 };
 const saveDb = (data) => {
   fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
@@ -262,6 +271,59 @@ app.post('/api/feedback', (req, res) => {
   } catch (error) {
     console.error('Feedback error:', error);
     res.status(500).json({ error: 'Failed to save feedback' });
+  }
+});
+
+app.post('/api/users', (req, res) => {
+  const { email, name, id } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  try {
+    const db = getDb();
+    const existingIndex = db.users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+
+    const entry = {
+      id: id || Date.now().toString(),
+      name: name || email.split('@')[0],
+      email: email,
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString()
+    };
+
+    if (existingIndex >= 0) {
+      db.users[existingIndex].lastLoginAt = new Date().toISOString();
+      if (name) db.users[existingIndex].name = name;
+      if (id) db.users[existingIndex].id = id;
+    } else {
+      db.users.push(entry);
+    }
+
+    saveDb(db);
+    res.json({ success: true, user: existingIndex >= 0 ? db.users[existingIndex] : entry });
+  } catch (error) {
+    console.error('Error logging user login/signup:', error);
+    res.status(500).json({ error: 'Failed to log user connection' });
+  }
+});
+
+app.post('/api/visits', (req, res) => {
+  const { visitorId } = req.body;
+  if (!visitorId) return res.status(400).json({ error: 'VisitorId is required' });
+
+  try {
+    const db = getDb();
+    const visitEntry = {
+      id: Date.now().toString(),
+      visitorId,
+      timestamp: new Date().toISOString()
+    };
+
+    db.visits.push(visitEntry);
+    saveDb(db);
+    res.json({ success: true, count: db.visits.length });
+  } catch (error) {
+    console.error('Error logging website visit:', error);
+    res.status(500).json({ error: 'Failed to log website visit' });
   }
 });
 

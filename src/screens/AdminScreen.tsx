@@ -21,19 +21,36 @@ interface FeedbackEntry {
   createdAt: string;
 }
 
+interface UserEntry {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  lastLoginAt: string;
+}
+
+interface VisitEntry {
+  id: string;
+  visitorId: string;
+  timestamp: string;
+}
+
 interface AdminData {
   waitlist: WaitlistEntry[];
   feedback: FeedbackEntry[];
+  users?: UserEntry[];
+  visits?: VisitEntry[];
 }
 
 const AdminScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState<AdminData>({ waitlist: [], feedback: [] });
+  const [data, setData] = useState<AdminData>({ waitlist: [], feedback: [], users: [], visits: [] });
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [activeTab, setActiveTab] = useState<'waitlist' | 'users' | 'feedback'>('waitlist');
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +94,30 @@ const AdminScreen: React.FC = () => {
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", `waitlist_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportUsersCSV = () => {
+    const users = data.users || [];
+    if (!users.length) return alert('No registered users to export');
+    
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "ID,Name,Email,Registered Date,Last Active Date\n";
+    
+    users.forEach(row => {
+      const regDate = new Date(row.createdAt).toLocaleDateString();
+      const activeDate = new Date(row.lastLoginAt).toLocaleDateString();
+      const safeName = `"${row.name.replace(/"/g, '""')}"`;
+      const rowStr = `${row.id},${safeName},${row.email},${regDate},${activeDate}`;
+      csvContent += rowStr + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `registered_users_export_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -143,97 +184,202 @@ const AdminScreen: React.FC = () => {
       <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
         
         {/* Stats Summary */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-          <div className="card stat-card hover-lift">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-              <Users color="var(--primary-indigo)" size={24} />
-              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Total Signups</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Users color="var(--primary-indigo)" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Waitlist Signups</div>
             </div>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{data.waitlist.length}</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{data.waitlist.length}</div>
           </div>
           
-          <div className="card stat-card hover-lift">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-              <MessageSquare color="var(--primary-green)" size={24} />
-              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Feedback Entries</div>
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Shield color="var(--primary-purple)" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Registered Users</div>
             </div>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{data.feedback.length}</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{data.users?.length || 0}</div>
+          </div>
+
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Eye color="#38bdf8" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Total Visits</div>
+            </div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{data.visits?.length || 0}</div>
+          </div>
+
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Users color="#06b6d4" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Unique Visitors</div>
+            </div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>
+              {new Set(data.visits?.map(v => v.visitorId) || []).size}
+            </div>
           </div>
           
-          <div className="card stat-card hover-lift">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-              <Star color="#facc15" size={24} />
-              <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Avg Excitement</div>
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <MessageSquare color="var(--primary-green)" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Feedback Entries</div>
             </div>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{avgRating}</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{data.feedback.length}</div>
+          </div>
+          
+          <div className="card stat-card hover-lift" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Star color="#facc15" size={20} />
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>Avg Excitement</div>
+            </div>
+            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{avgRating}</div>
           </div>
         </div>
 
-        {/* Waitlist Table */}
-        <div className="card" style={{ marginBottom: '2rem', padding: '0', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Waitlist ({data.waitlist.length})</h2>
-            <button onClick={exportCSV} className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
-              <Download size={16} /> Export CSV
-            </button>
-          </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)' }}>
-                  <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Date</th>
-                  <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Name</th>
-                  <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Email</th>
-                  <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Use Case</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.waitlist.length === 0 ? (
-                  <tr><td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No signups yet.</td></tr>
-                ) : (
-                  data.waitlist.map((entry) => (
-                    <tr key={entry.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem' }}>{new Date(entry.createdAt).toLocaleDateString()}</td>
-                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem' }}>{entry.firstName} {entry.lastName}</td>
-                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--primary-indigo)' }}>{entry.email}</td>
-                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{entry.useCase || '-'}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+        {/* Tab Controls */}
+        <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem', paddingBottom: '0.25rem' }}>
+          <button 
+            onClick={() => setActiveTab('waitlist')}
+            style={{
+              background: 'none', border: 'none', color: activeTab === 'waitlist' ? 'var(--text-main)' : 'var(--text-muted)',
+              fontSize: '1rem', fontWeight: 600, padding: '0.75rem 1.25rem', cursor: 'pointer',
+              borderBottom: activeTab === 'waitlist' ? '2px solid var(--primary-indigo)' : '2px solid transparent',
+              transition: 'all 0.2s', fontFamily: 'var(--font-family)'
+            }}
+          >
+            Waitlist Signups ({data.waitlist.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab('users')}
+            style={{
+              background: 'none', border: 'none', color: activeTab === 'users' ? 'var(--text-main)' : 'var(--text-muted)',
+              fontSize: '1rem', fontWeight: 600, padding: '0.75rem 1.25rem', cursor: 'pointer',
+              borderBottom: activeTab === 'users' ? '2px solid var(--primary-indigo)' : '2px solid transparent',
+              transition: 'all 0.2s', fontFamily: 'var(--font-family)'
+            }}
+          >
+            Registered Users ({data.users?.length || 0})
+          </button>
+          <button 
+            onClick={() => setActiveTab('feedback')}
+            style={{
+              background: 'none', border: 'none', color: activeTab === 'feedback' ? 'var(--text-main)' : 'var(--text-muted)',
+              fontSize: '1rem', fontWeight: 600, padding: '0.75rem 1.25rem', cursor: 'pointer',
+              borderBottom: activeTab === 'feedback' ? '2px solid var(--primary-indigo)' : '2px solid transparent',
+              transition: 'all 0.2s', fontFamily: 'var(--font-family)'
+            }}
+          >
+            User Feedback ({data.feedback.length})
+          </button>
         </div>
 
-        {/* Feedback List */}
-        <div className="card" style={{ padding: '1.5rem' }}>
-          <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.25rem' }}>Feedback Received ({data.feedback.length})</h2>
-          
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {data.feedback.length === 0 ? (
-              <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No feedback yet.</div>
-            ) : (
-              data.feedback.map(entry => (
-                <div key={entry.id} style={{ padding: '1rem', background: 'var(--bg-hover)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                      <span className="badge" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-highlight)' }}>{entry.category}</span>
-                      <div style={{ display: 'flex', gap: '2px' }}>
-                        {Array(5).fill(0).map((_, i) => (
-                          <Star key={i} size={14} fill={i < entry.rating ? "#facc15" : "transparent"} color={i < entry.rating ? "#facc15" : "var(--border-color)"} />
-                        ))}
+        {/* Tab Contents */}
+        {activeTab === 'waitlist' && (
+          <div className="card" style={{ marginBottom: '2rem', padding: '0', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Waitlist ({data.waitlist.length})</h2>
+              <button onClick={exportCSV} className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
+                <Download size={16} /> Export CSV
+              </button>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)' }}>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Date</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Name</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Email</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Use Case</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.waitlist.length === 0 ? (
+                    <tr><td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No signups yet.</td></tr>
+                  ) : (
+                    data.waitlist.map((entry) => (
+                      <tr key={entry.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem' }}>{new Date(entry.createdAt).toLocaleDateString()}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem' }}>{entry.firstName} {entry.lastName}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--primary-indigo)' }}>{entry.email}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{entry.useCase || '-'}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'users' && (
+          <div className="card" style={{ marginBottom: '2rem', padding: '0', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Registered Users ({data.users?.length || 0})</h2>
+              <button onClick={exportUsersCSV} className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
+                <Download size={16} /> Export CSV
+              </button>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)' }}>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>User ID</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Name</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Email</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Joined Date</th>
+                    <th style={{ padding: '1rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Last Active</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!data.users || data.users.length === 0 ? (
+                    <tr><td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No registered users yet.</td></tr>
+                  ) : (
+                    data.users.map((entry) => (
+                      <tr key={entry.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{entry.id}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', fontWeight: 500 }}>{entry.name}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--primary-indigo)' }}>{entry.email}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem' }}>{new Date(entry.createdAt).toLocaleString()}</td>
+                        <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--primary-green)' }}>{new Date(entry.lastLoginAt).toLocaleString()}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'feedback' && (
+          <div className="card" style={{ padding: '1.5rem' }}>
+            <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.25rem' }}>Feedback Received ({data.feedback.length})</h2>
+            
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              {data.feedback.length === 0 ? (
+                <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No feedback yet.</div>
+              ) : (
+                data.feedback.map(entry => (
+                  <div key={entry.id} style={{ padding: '1rem', background: 'var(--bg-hover)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <span className="badge" style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-highlight)' }}>{entry.category}</span>
+                        <div style={{ display: 'flex', gap: '2px' }}>
+                          {Array(5).fill(0).map((_, i) => (
+                            <Star key={i} size={14} fill={i < entry.rating ? "#facc15" : "transparent"} color={i < entry.rating ? "#facc15" : "var(--border-color)"} />
+                          ))}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        {new Date(entry.createdAt).toLocaleDateString()}
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      {new Date(entry.createdAt).toLocaleDateString()}
-                    </div>
+                    <div style={{ fontSize: '0.9rem', lineHeight: 1.5 }}>{entry.message || <em style={{color: 'var(--text-muted)'}}>No message provided</em>}</div>
                   </div>
-                  <div style={{ fontSize: '0.9rem', lineHeight: 1.5 }}>{entry.message || <em style={{color: 'var(--text-muted)'}}>No message provided</em>}</div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

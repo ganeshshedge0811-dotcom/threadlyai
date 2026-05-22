@@ -85,6 +85,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
     tone: 'Friendly Expert',
     platforms: ['Reddit', 'Twitter', 'LinkedIn', 'HackerNews'],
     keywords: '',
+    websiteUrl: '',
   });
 
   // Local state for MVP (not persisted to DB yet)
@@ -123,6 +124,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
         .eq('user_id', user.id)
         .single();
         
+      const localWebsiteUrl = localStorage.getItem(`threadly_website_url_${user.id}`) || '';
       if (settingsData) {
         setSettings({
           productName: settingsData.product_name || '',
@@ -132,7 +134,13 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
           tone: settingsData.tone || 'Friendly Expert',
           keywords: settingsData.keywords || '',
           platforms: ['Reddit', 'Twitter', 'LinkedIn', 'HackerNews'],
+          websiteUrl: settingsData.website_url || localWebsiteUrl || '',
         });
+      } else {
+        setSettings((prev: any) => ({
+          ...prev,
+          websiteUrl: localWebsiteUrl || ''
+        }));
       }
 
       // Fetch Threads
@@ -322,8 +330,13 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
 
   const saveSettings = async (newSettings: any) => {
     if (!user) return;
+    
+    // Save to localStorage as a robust local backup
+    localStorage.setItem(`threadly_website_url_${user.id}`, newSettings.websiteUrl || '');
+
     try {
-      await supabase.from('user_settings').upsert({
+      // First try to upsert everything including website_url
+      const { error } = await supabase.from('user_settings').upsert({
         user_id: user.id,
         product_name: newSettings.productName,
         product_description: newSettings.productDescription,
@@ -331,13 +344,38 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({ children })
         competitors: newSettings.competitors,
         tone: newSettings.tone,
         keywords: newSettings.keywords,
+        website_url: newSettings.websiteUrl, // Try saving this new column
         updated_at: new Date().toISOString()
       });
+
+      if (error) {
+        // Check if error is due to missing column 'website_url'
+        if (error.message && error.message.includes('website_url')) {
+          console.warn('website_url column does not exist in Supabase yet. Falling back to saving other fields and keeping website_url in localStorage.');
+          
+          // Save without website_url column
+          const { error: fallbackError } = await supabase.from('user_settings').upsert({
+            user_id: user.id,
+            product_name: newSettings.productName,
+            product_description: newSettings.productDescription,
+            target_audience: newSettings.targetAudience,
+            competitors: newSettings.competitors,
+            tone: newSettings.tone,
+            keywords: newSettings.keywords,
+            updated_at: new Date().toISOString()
+          });
+          
+          if (fallbackError) throw fallbackError;
+        } else {
+          throw error;
+        }
+      }
+      
       setSettings(newSettings);
-      notify('Settings saved to database', 'success');
+      notify('Settings saved successfully', 'success');
     } catch (error) {
       console.error('Failed to save settings:', error);
-      alert('Failed to save settings to database. Have you run the schema.sql script?');
+      alert('Failed to save settings. If you haven\'t yet, please run the SQL query in add_website_column.sql inside Supabase SQL editor.');
     }
   };
 

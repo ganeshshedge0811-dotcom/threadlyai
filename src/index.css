@@ -777,6 +777,119 @@ textarea::placeholder {
   background-color: var(--border-color);
 }
 
+/* ===== RESPONSIVE GRID UTILITIES ===== */
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.responsive-grid-2-sm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.grid-span-full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .responsive-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .responsive-grid-2-sm {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* ===== SETTINGS SHORTCUT BUTTON ===== */
+.settings-shortcut-btn {
+  display: none;
+}
+
+/* ===== SETUP BANNER ===== */
+.setup-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.06) 100%);
+  animation: fadeIn 0.4s ease-out;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.setup-banner:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.1) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+}
+
+.setup-banner-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-indigo), var(--primary-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  animation: ctaBreathing 3s ease-in-out infinite;
+}
+
+.setup-banner-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.setup-banner-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.15rem;
+}
+
+.setup-banner-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.setup-banner-arrow {
+  color: var(--primary-indigo);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.setup-banner:hover .setup-banner-arrow {
+  transform: translateX(4px);
+}
+
+/* ===== SECTION TABS SCROLLABLE ===== */
+.section-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 2px;
+}
+
+.section-tabs::-webkit-scrollbar {
+  display: none;
+}
+
 /* ===== MOBILE RESPONSIVE ===== */
 .sidebar-overlay {
   display: none;

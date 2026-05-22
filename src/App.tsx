@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -12,6 +13,26 @@ import AdminScreen from './screens/AdminScreen';
 import NotFoundScreen from './screens/NotFoundScreen';
 
 function App() {
+  useEffect(() => {
+    // Generate/retrieve a persistent visitor ID for unique visitor counting
+    let visitorId = localStorage.getItem('threadly_visitor_id');
+    if (!visitorId) {
+      visitorId = 'vis_' + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem('threadly_visitor_id', visitorId);
+    }
+
+    // Only record one visit event per browsing session to avoid spamming the backend
+    const sessionActive = sessionStorage.getItem('threadly_session_active');
+    if (!sessionActive) {
+      sessionStorage.setItem('threadly_session_active', 'true');
+      fetch('/api/visits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId })
+      }).catch(err => console.error('Failed to log website visit:', err));
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>

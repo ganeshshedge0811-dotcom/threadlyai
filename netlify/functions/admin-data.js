@@ -22,13 +22,17 @@ export const handler = async (event) => {
   }
 
   try {
-    const [waitlistRes, feedbackRes] = await Promise.all([
+    const [waitlistRes, feedbackRes, usersRes, visitsRes] = await Promise.all([
       supabase.from('waitlist').select('*').order('created_at', { ascending: false }),
       supabase.from('feedback').select('*').order('created_at', { ascending: false }),
+      supabase.auth.admin.listUsers(),
+      supabase.from('website_visits').select('id, visitor_id, created_at').order('created_at', { ascending: false }),
     ]);
 
     if (waitlistRes.error) throw waitlistRes.error;
     if (feedbackRes.error) throw feedbackRes.error;
+    if (usersRes.error) throw usersRes.error;
+    if (visitsRes.error) throw visitsRes.error;
 
     // Normalize field names to match existing AdminScreen expectations
     const waitlist = (waitlistRes.data || []).map(r => ({
@@ -48,7 +52,21 @@ export const handler = async (event) => {
       createdAt: r.created_at,
     }));
 
-    return { statusCode: 200, headers, body: JSON.stringify({ waitlist, feedback }) };
+    const users = (usersRes.data?.users || []).map(u => ({
+      id: u.id,
+      name: u.user_metadata?.full_name || u.user_metadata?.name || u.email.split('@')[0],
+      email: u.email,
+      createdAt: u.created_at,
+      lastLoginAt: u.last_sign_in_at || u.created_at,
+    }));
+
+    const visits = (visitsRes.data || []).map(v => ({
+      id: v.id,
+      visitorId: v.visitor_id,
+      timestamp: v.created_at,
+    }));
+
+    return { statusCode: 200, headers, body: JSON.stringify({ waitlist, feedback, users, visits }) };
   } catch (err) {
     console.error('Admin data error:', err);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server error' }) };

@@ -98,7 +98,7 @@ const OnboardingScreen: React.FC = () => {
       </div>
 
       {/* Section Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div className="section-tabs">
         {sections.map(s => (
           <button
             key={s.key}
@@ -118,8 +118,8 @@ const OnboardingScreen: React.FC = () => {
             <h3 style={{ fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Zap size={18} className="text-green" /> Product Details
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+            <div className="responsive-grid-2">
+              <div className="form-group">
                 <label htmlFor="productName">Product Name</label>
                 <input
                   type="text" id="productName" name="productName"
@@ -128,7 +128,19 @@ const OnboardingScreen: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <div className="form-group">
+                <label htmlFor="websiteUrl">Product Website / URL</label>
+                <input
+                  type="text" id="websiteUrl" name="websiteUrl"
+                  value={formData.websiteUrl || ''} onChange={handleChange}
+                  placeholder="e.g. https://threadlyai.com"
+                />
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
+                  Used by AI to reference your product link in reply drafts.
+                </span>
+              </div>
+
+              <div className="form-group grid-span-full">
                 <label htmlFor="productDescription">Product Description</label>
                 <textarea
                   id="productDescription" name="productDescription"
@@ -217,7 +229,7 @@ const OnboardingScreen: React.FC = () => {
             {/* Platform Toggles */}
             <div style={{ marginBottom: '2rem' }}>
               <label style={{ display: 'block', marginBottom: '1rem', fontSize: '0.875rem', fontWeight: 500 }}>Platforms to Monitor</label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className="responsive-grid-2-sm">
                 {['Reddit', 'Twitter', 'LinkedIn', 'HackerNews'].map(platform => {
                   const isActive = formData.platforms.includes(platform);
                   const color = PLATFORM_COLORS[platform];
@@ -297,7 +309,7 @@ const OnboardingScreen: React.FC = () => {
               Connect your accounts. Add backup keys to ensure campaigns never stop.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="responsive-grid-2">
               {[
                 { label: 'Reddit Client ID (Primary)', name: 'redditClientId', color: '#ff4500' },
                 { label: 'Reddit Client ID (Backup)', name: 'redditBackupClientId', color: '#ff4500' },
@@ -311,7 +323,7 @@ const OnboardingScreen: React.FC = () => {
                   </label>
                   <input
                     type="password" id={field.name} name={field.name}
-                    value={(formData as any)[field.name]} onChange={handleChange}
+                    value={(formData as Record<string, string>)[field.name] ?? ''} onChange={handleChange}
                     placeholder={field.name.includes('Backup') ? 'Optional — auto switches on failure' : ''}
                   />
                 </div>

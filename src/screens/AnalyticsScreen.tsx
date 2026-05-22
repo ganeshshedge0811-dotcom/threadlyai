@@ -4,6 +4,14 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { BarChart2, MessageSquare, CheckCircle, TrendingUp, Shield, Zap, Target, ArrowUpRight, Loader } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+// Define types locally since imports can vary across Recharts versions
+type ValueType = number | string | Array<number | string>;
+type NameType = number | string;
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ name: NameType; value: ValueType; color?: string; dataKey?: string }>;
+  label?: string;
+}
 
 const PLATFORM_COLORS: Record<string, string> = {
   Reddit: '#ff4500',
@@ -17,6 +25,26 @@ const CREDIT_LIMITS: Record<string, number> = {
 };
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+type HistoricalItem = { id: string; platform: string; created_at: string; status?: string };
+
+// --- Custom Tooltip (must be declared outside the component) ---
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{ background: '#111827', border: '1px solid #1f2937', padding: '10px 15px', borderRadius: '10px', boxShadow: '0 8px 30px rgba(0,0,0,0.4)' }}>
+        <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>{label}</p>
+        {payload.map((entry) => (
+          <p key={entry.name} style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: entry.color, display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+            <span>{entry.name}:</span>
+            <span style={{ fontWeight: 700 }}>{entry.value}</span>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 // --- Skeleton loader for cards ---
 const SkeletonCard: React.FC = () => (
@@ -84,8 +112,8 @@ const AnalyticsScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Historical data from Supabase
-  const [allThreads, setAllThreads] = useState<any[]>([]);
-  const [allReplies, setAllReplies] = useState<any[]>([]);
+  const [allThreads, setAllThreads] = useState<HistoricalItem[]>([]);
+  const [allReplies, setAllReplies] = useState<HistoricalItem[]>([]);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
@@ -193,7 +221,7 @@ const AnalyticsScreen: React.FC = () => {
   const lastPostTime = useMemo(() => {
     const posted = allReplies.filter(r => r.status === 'Posted');
     if (posted.length === 0) return '—';
-    const sorted = posted.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const sorted = posted.sort((a: HistoricalItem, b: HistoricalItem) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return new Date(sorted[0].created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }, [allReplies]);
 
@@ -218,22 +246,6 @@ const AnalyticsScreen: React.FC = () => {
     }));
   }, [notifications, allReplies]);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div style={{ background: '#111827', border: '1px solid #1f2937', padding: '10px 15px', borderRadius: '10px', boxShadow: '0 8px 30px rgba(0,0,0,0.4)' }}>
-          <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>{label}</p>
-          {payload.map((entry: any) => (
-            <p key={entry.name} style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: entry.color, display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
-              <span>{entry.name}:</span>
-              <span style={{ fontWeight: 700 }}>{entry.value}</span>
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
 
   if (loading) {
     return (

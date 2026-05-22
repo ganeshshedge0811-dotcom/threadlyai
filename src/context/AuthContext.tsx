@@ -26,11 +26,24 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
 
   const fetchAndSetUser = async (supabaseUser: SupabaseUser) => {
     // Set user immediately from session data (no DB call) — this is instant
+    const initialName = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
     setUser({
       id: supabaseUser.id,
       email: supabaseUser.email || '',
-      name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
+      name: initialName,
     });
+
+    // Log user connection to admin backend
+    fetch('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: supabaseUser.email || '',
+        name: initialName,
+        id: supabaseUser.id
+      })
+    }).catch(err => console.error('Failed to log user session:', err));
+
     // Then fetch profile name from DB in the background (non-blocking)
     try {
       const { data: profile } = await supabase
@@ -40,6 +53,17 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
         .single();
       if (profile?.name) {
         setUser(prev => prev ? { ...prev, name: profile.name } : prev);
+
+        // Update name in backend with fetched profile name
+        fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: supabaseUser.email || '',
+            name: profile.name,
+            id: supabaseUser.id
+          })
+        }).catch(() => {});
       }
     } catch {
       // Non-critical — user is already set without profile name
@@ -125,6 +149,17 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
         const mockUser = { id: `mock-${Date.now()}`, email, name: name || email.split('@')[0] };
         localStorage.setItem('mockUser', JSON.stringify(mockUser));
         setUser(mockUser);
+        
+        // Log user connection to admin backend
+        fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: name || email.split('@')[0],
+            id: mockUser.id
+          })
+        }).catch(err => console.error('Failed to log mock user signup/login:', err));
         
         // Dispatch Welcome Email to node server just for demo logs
         fetch('/api/email/welcome', {

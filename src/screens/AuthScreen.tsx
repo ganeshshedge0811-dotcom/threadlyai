@@ -4,6 +4,9 @@ import { Shield, Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle, Sparkles
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 
+const getErrorMessage = (err: unknown): string =>
+  err instanceof Error ? err.message : String(err);
+
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -134,8 +137,8 @@ const AuthScreen: React.FC = () => {
         await updatePassword(form.password);
         setPasswordUpdated(true);
         setTimeout(() => navigate('/dashboard/inbox', { replace: true }), 2000);
-      } catch (err: any) {
-        setErrors({ password: err?.message || 'Failed to update password.' });
+      } catch (err: unknown) {
+        setErrors({ password: getErrorMessage(err) || 'Failed to update password.' });
       } finally {
         setLoading(false);
       }
@@ -151,8 +154,8 @@ const AuthScreen: React.FC = () => {
       try {
         await resetPassword(form.email);
         setResetEmailSent(true);
-      } catch (err: any) {
-        setErrors({ email: err?.message || 'Failed to send reset email.' });
+      } catch (err: unknown) {
+        setErrors({ email: getErrorMessage(err) || 'Failed to send reset email.' });
       } finally {
         setLoading(false);
       }
@@ -177,9 +180,9 @@ const AuthScreen: React.FC = () => {
           navigate(from, { replace: true });
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
-      const message = err?.message || 'Authentication failed. Please check your credentials.';
+      const message = getErrorMessage(err) || 'Authentication failed. Please check your credentials.';
       setErrors({ ...errors, password: message });
     } finally {
       setLoading(false);
@@ -191,7 +194,7 @@ const AuthScreen: React.FC = () => {
     try {
       await loginWithGoogle();
       // Note: Supabase OAuth handles redirect, so we don't manually navigate here.
-    } catch (err: any) {
+    } catch {
       setGoogleLoading(false);
       alert('Google sign-in is not enabled yet. Please use email/password or GitHub.');
     }
@@ -207,9 +210,9 @@ const AuthScreen: React.FC = () => {
         }
       });
       if (error) throw error;
-    } catch (err: any) {
+    } catch (err: unknown) {
       setGithubLoading(false);
-      alert('GitHub sign-in failed: ' + err.message);
+      alert('GitHub sign-in failed: ' + getErrorMessage(err));
     }
   };
 

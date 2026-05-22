@@ -42,6 +42,16 @@
   to = "/.netlify/functions/welcome-email"
   status = 200
 
+[[redirects]]
+  from = "/api/visits"
+  to = "/.netlify/functions/visits"
+  status = 200
+
+[[redirects]]
+  from = "/api/users"
+  to = "/.netlify/functions/users"
+  status = 200
+
 # SPA fallback — all other routes serve index.html
 [[redirects]]
   from = "/*"

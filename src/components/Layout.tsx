@@ -339,6 +339,14 @@ const Layout: React.FC = () => {
               )}
             </div>
 
+            <button 
+              className="header-icon-btn" 
+              title="Settings"
+              onClick={() => navigate('/dashboard/onboarding')}
+            >
+              <Settings size={16} />
+            </button>
+
             <div className="header-avatar" title="Account">
               <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
